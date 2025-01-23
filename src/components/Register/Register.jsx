@@ -1,6 +1,7 @@
 import { createUserWithEmailAndPassword} from "firebase/auth";
 import auth from "../firebase/firebase.confi";
 import { useState } from "react";
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 // register error
 const Register = () => {
@@ -10,15 +11,37 @@ const Register = () => {
     // set success 
     const [success, setSuccess] = useState('');
 
+    // show password
+    const [showPassword, setShowPassword] = useState(false);
+
+
 const handleRegister = e =>{
     e.preventDefault();
 
     const email = e.target.email.value;
     const password = e.target.password.value;
-   console.log( email, password);
-//    reset error
+    const accepted = e.target.terms.checked;
+   console.log( email, password, accepted);
+   
+   //    reset error
 setRegisterError('');
 setSuccess('');
+
+
+   if(password.length <6){
+    setRegisterError('Password should be at least 6 characters or longer')
+   }
+
+   else if(!/[A-Z]/.test(password)){
+    setRegisterError('Your password should have at least one upper case characters.')
+    return;
+
+   }
+
+   else if (!accepted){
+    setRegisterError('Please accept our terms and conditions!')
+    return;
+   }
 
 //    create user
     createUserWithEmailAndPassword(auth, email, password)
@@ -38,13 +61,27 @@ setSuccess('');
        <div className="max-auto md:w-1/2">
        <h2 className="text-3xl mb-8">Please Register</h2>
 <form onSubmit={handleRegister}>
- <input className="mb-4 w-3/4 bg-stone-600 px-4 py-2" type="email"
-  placeholder='E-mail Adress' name="email" id="email" />
+ <input className="mb-4 w-full bg-stone-600 px-4 py-2" type="email"
+  placeholder='E-mail Adress' name="email" id="email" required/>
  <br />
- <input className='mb-4 w-3/4 bg-stone-600 px-4 py-2' type="password"
- placeholder='Password' name="password" id="password" />
+ <div className="mb-4 relative border">
+ <input className='w-full bg-stone-600 px-4 py-2' 
+ type={showPassword ? 'text' : "password"}
+ placeholder='Password' name="password" 
+ id="password" required />
+ <span className="absolute top-3 right-2" onClick={ () => setShowPassword(!showPassword)}>
+ {
+    showPassword ? <FaEyeSlash></FaEyeSlash> :
+     <FaEye></FaEye>
+ }
+
+ </span>
+ </div>
  <br />
- <input className='btn btn-secondary' type="submit" value="Register" />
+ <input type="checkbox" name="terms" id="terms" />
+ <label htmlFor="terms">Accept all terms and  Conditions</label>
+ <br />
+ <input className='btn btn-secondary mb-4 w-full' type="submit" value="Register" />
 </form>
 
 
