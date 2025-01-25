@@ -2,6 +2,7 @@ import { createUserWithEmailAndPassword} from "firebase/auth";
 import auth from "../firebase/firebase.confi";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { Link } from "react-router-dom";
 
 // register error
 const Register = () => {
@@ -23,7 +24,7 @@ const handleRegister = e =>{
     const accepted = e.target.terms.checked;
    console.log( email, password, accepted);
    
-   //    reset error
+   //    reset error & Success
 setRegisterError('');
 setSuccess('');
 
@@ -95,6 +96,8 @@ setSuccess('');
                 {success}
             </p>
         }
+
+        <p>Already have an Account? Please <Link to="/login">Login</Link></p>
 
 
           
