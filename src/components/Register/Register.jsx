@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword} from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile} from "firebase/auth";
 import auth from "../firebase/firebase.confi";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
@@ -46,9 +46,25 @@ setSuccess('');
 
 //    create user
     createUserWithEmailAndPassword(auth, email, password)
-    .then(result =>{
+    .then(result => {
     console.log(result.user);
     setSuccess('User Create Successfully.')
+
+    //  update profile
+    updateProfile(result.user, {
+        displayName: name,
+        photoURL: "https://example.com/jane-q-user/profile.jpg"
+    })
+
+    .then( () => console.log('Profile updated'))
+    .catch()
+
+    .then( () =>{
+        alert('Please check your email and verify your account')
+    })
+
+    // send verification email
+    sendEmailVerification(result.user)
 })
 .catch(error =>{
     console.error(error);
